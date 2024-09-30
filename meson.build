@@ -1,4 +1,4 @@
-project('hashlib', 'cpp')
+project('hashlib', 'cpp', version: '1.0.0')
 
 src = files(
     './src/crc32.cpp',
