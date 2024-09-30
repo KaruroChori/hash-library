@@ -34,3 +34,5 @@ pkg_mod.generate(
     libraries: hashlib,
     version: meson.project_version(),
 )
+
+subdir('./test')
