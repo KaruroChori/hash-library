@@ -50,7 +50,7 @@ jobs:
       run: |
         brew update
         brew install \
-          llvm@19 \
+          llvm \
           meson \
           ninja
         PATH=/opt/homebrew/opt/llvm/bin:$PATH
