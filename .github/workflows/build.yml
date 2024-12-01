@@ -1,0 +1,63 @@
+name: build and test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - '**'
+    - '!**.yml'
+    - '!**.md'
+    - '**/build.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+    - '**'
+    - '!**.yml'
+    - '!**.md'
+    - '**/build.yml'
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+          sudo apt update
+          sudo apt remove -y firefox
+          sudo apt upgrade -y
+          sudo apt install -y \
+            python3-pip \
+            python3-setuptools
+          python3 -m pip install meson ninja
+
+    - name: Configure and build
+      run: |
+        meson setup build
+        meson compile -C build
+
+  macos:
+    runs-on: macos-14
+    env:
+      LDFLAGS: '-L/opt/homebrew/opt/llvm/lib'
+      CPPFLAGS: '-I/opt/homebrew/opt/llvm/include'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install \
+          llvm \
+          meson \
+          ninja
+        PATH=/opt/homebrew/opt/llvm/bin:$PATH
+        echo "PATH=$PATH" >> $GITHUB_ENV
+
+    - name: Configure and build
+      run: |
+        meson setup build
+        meson compile -C build
+
