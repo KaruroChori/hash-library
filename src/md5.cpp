@@ -7,7 +7,7 @@
 #include "md5.h"
 
 #ifdef _MSC_VER
-#elif defined OS_DARWIN
+#elif defined __APPLE__
 #include <machine/endian.h>
 #else
 #include <endian.h>
