@@ -7,7 +7,10 @@
 #include "sha256.h"
 
 // big endian architectures need #define __BYTE_ORDER __BIG_ENDIAN
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+#elif defined OS_DARWIN
+#include <machine/endian.h>
+#else
 #include <endian.h>
 #endif
 
