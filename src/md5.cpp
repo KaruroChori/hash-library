@@ -6,10 +6,12 @@
 
 #include "md5.h"
 
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+#elif defined OS_DARWIN
+#include <machine/endian.h>
+#else
 #include <endian.h>
 #endif
-
 
 /// same as reset()
 MD5::MD5()
