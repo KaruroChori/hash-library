@@ -9,15 +9,7 @@
 //#include "hash.h"
 #include <string>
 
-// define fixed size integer types
-#ifdef _MSC_VER
-// Windows
-typedef unsigned __int8  uint8_t;
-typedef unsigned __int32 uint32_t;
-#else
-// GCC
-#include <stdint.h>
-#endif
+#include "hl-types.h"
 
 
 /// compute CRC32 hash, based on Intel's Slicing-by-8 algorithm
