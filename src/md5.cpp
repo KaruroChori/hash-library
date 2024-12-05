@@ -6,7 +6,7 @@
 
 #include "md5.h"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 #elif defined __APPLE__
 #include <machine/endian.h>
 #else

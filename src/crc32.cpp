@@ -7,7 +7,7 @@
 #include "crc32.h"
 
 // big endian architectures need #define __BYTE_ORDER __BIG_ENDIAN
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 #elif defined __APPLE__
 #include <machine/endian.h>
 #else
