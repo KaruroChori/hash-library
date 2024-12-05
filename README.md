@@ -1,8 +1,10 @@
 # Portable C++ Hashing Library
 
 This is a fork of the library at https://create.stephan-brumme.com/hash-library/.  
-The repo has been restructured to better fit with my build system of choice & to include patches from upstream which is not longer maintained.  
-I also plan to include murmur hashing to this lib as I need it.  
+The repo has been restructured to better fit with my build system of choice.
+I also included patches from [upstream](https://github.com/stbrumme/hash-library) which is not longer maintained.  
+
+This fork does not make too many changes over the original code, but there are [plans](https://github.com/KaruroChori/hash-library/issues/6) to integrate murmur hashing.
 
 ---------
 
