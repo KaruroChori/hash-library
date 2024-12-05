@@ -20,7 +20,26 @@ on:
     - '**/build.yml'
 
 jobs:
-  linux:
+  #build-x86-win32:
+  #  runs-on: windows-2019
+  #  timeout-minutes: 6
+  #  steps:
+  #  - uses: actions/checkout@v4
+  #  - name: make & test tcc (x86_64-win32)
+  #    shell: cmd
+  #    run: |
+  #      set MSYS2_PATH_TYPE=inherit
+  #      set MSYSTEM=MINGW64
+  #      set CHERE_INVOKING=yes
+  #      C:\msys64\usr\bin\bash -l -c "./configure && make && make test -k"
+  #  - name: make & test tcc (i386-win32)
+  #    shell: cmd
+  #    run: |
+  #     set MSYS2_PATH_TYPE=inherit
+  #      set MSYSTEM=MINGW32
+  #      set CHERE_INVOKING=yes
+  #      C:\msys64\usr\bin\bash -l -c "./configure && make clean all && make test -k"
+  build-linux:
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
@@ -38,9 +57,40 @@ jobs:
       run: |
         meson setup build
         meson compile -C build
-
-  macos:
-    runs-on: macos-14
+  build-linux-cross:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu22.04]
+        arch: [riscv64, aarch64, armv7]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+    - uses: actions/checkout@v4
+    - uses: uraimo/run-on-arch-action@v2
+      name: Install dependencies
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ${{ matrix.os }}
+        githubToken: ${{ github.token }}
+        install: |
+          apt update
+          apt remove -y firefox
+          apt upgrade -y
+          apt install -y \
+            python3-pip \
+            python3-setuptools
+          python3 -m pip install meson ninja
+        run: |
+          meson setup build
+          meson compile -C build     
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 6
     env:
       LDFLAGS: '-L/opt/homebrew/opt/llvm/lib'
       CPPFLAGS: '-I/opt/homebrew/opt/llvm/include'
