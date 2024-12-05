@@ -20,13 +20,31 @@ on:
     - '**/build.yml'
 
 jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+          sudo apt update
+          sudo apt remove -y firefox
+          sudo apt upgrade -y
+          sudo apt install -y \
+            python3-pip \
+            python3-setuptools
+          python3 -m pip install meson ninja
+
+    - name: Configure and build
+      run: |
+        meson setup build
+        meson compile -C build
   build-linux-cross:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu22.04]
         arch: [riscv64, aarch64, armv7]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
     - uses: actions/checkout@v4
