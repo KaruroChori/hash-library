@@ -20,12 +20,12 @@ on:
     - '**/build.yml'
 
 jobs:
-  test-linux:
+  build-linux-cross:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
-        arch: [riscv64, amd64, arm64]
+        os: [ubuntu22.04]
+        arch: [riscv64, aarch64, armv7]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 6
     steps:
@@ -47,8 +47,13 @@ jobs:
         run: |
           meson setup build
           meson compile -C build     
-  macos:
-    runs-on: macos-14
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 6
     env:
       LDFLAGS: '-L/opt/homebrew/opt/llvm/lib'
       CPPFLAGS: '-I/opt/homebrew/opt/llvm/include'
