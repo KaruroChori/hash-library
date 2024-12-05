@@ -20,12 +20,23 @@ on:
     - '**/build.yml'
 
 jobs:
-  linux:
-    runs-on: ubuntu-24.04
+  test-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04]
+        arch: [riscv64, amd64, arm64]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 6
     steps:
     - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: |
+    - uses: uraimo/run-on-arch-action@v2
+      name: Install dependencies
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ${{ matrix.os }}
+        githubToken: ${{ github.token }}
+        install: |
           sudo apt update
           sudo apt remove -y firefox
           sudo apt upgrade -y
@@ -33,12 +44,9 @@ jobs:
             python3-pip \
             python3-setuptools
           python3 -m pip install meson ninja
-
-    - name: Configure and build
-      run: |
-        meson setup build
-        meson compile -C build
-
+        run: |
+          meson setup build
+          meson compile -C build     
   macos:
     runs-on: macos-14
     env:
