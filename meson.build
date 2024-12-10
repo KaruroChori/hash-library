@@ -7,7 +7,8 @@ src = files(
     './src/md5.cpp',
     './src/sha1.cpp',
     './src/sha256.cpp',
-    './src/sha3.cpp'
+    './src/sha3.cpp',
+    './src/murmur3.cpp'
 )
 
 include_dir = include_directories('./include')
