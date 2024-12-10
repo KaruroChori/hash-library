@@ -18,7 +18,7 @@ void MurmurHash3_x86_128 ( const void * key, int len, uint32_t seed, void * out 
 
 void MurmurHash3_x64_128 ( const void * key, int len, uint32_t seed, void * out );
 
-template<uint SIZE>
+template<int SIZE = 128>
 void murmur3 ( const void * key, int len, uint32_t seed, uint8_t out[SIZE/8] ){
     if(SIZE==32){return MurmurHash3_x86_32(key, len, seed, out);}
     else if(SIZE==128 && sizeof(void*)==4){return MurmurHash3_x86_128(key, len, seed, out);}
